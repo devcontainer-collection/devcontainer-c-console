@@ -76,6 +76,6 @@ The static libraries for all target platforms will be built and compressed into 
 You can find the resulting files in the `[WORKSPACE_FOLDER]/app/build/static/packages/` directory, organized by target platform.
 
 #### 8.3 Test the Built Libraries  
-An example C project for testing the libraries is located at `[WORKSPACE_FOLDER]/app/example/libtest`.  
+An example CPP project for testing the libraries is located at `[WORKSPACE_FOLDER]/app/example/libtest`.  
 Refer to the `how-to-test-[OS].txt` file in the same directory for instructions on how to test the libraries. Ensure that the appropriate file for your target OS exists.  
 **Note:** Testing must be performed on the respective target OS for the libraries.
