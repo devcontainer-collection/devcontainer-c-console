@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "/workspace/app",
+    "files.associations": {
+        "string_utils.h": "c"
+    }
+}

@@ -1,0 +1,668 @@
+{
+  "name": "devcontainer-c-console",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "main",
+  "workspaceFolder": "/workspace",
+  // This script is executed only once after the image is built
+  "postCreateCommand": "sh /workspace/.devcontainer/containers/main/startup.sh",
+  // "postStartCommand":"",
+  // "postAttachCommand": "",
+  // "shutdownAction": "none",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "webfreak.debug" // Native Debug (GDB/LDB)  
+        //last extension should not have a comma
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 4,
+        "editor.renderWhitespace": "all",
+        "editor.formatOnSave": true,
+        "remote.localPortHost": "allInterfaces",
+        "git.detectSubmodulesLimit": 70,
+        "editor.tabCompletion": "on",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        //--------------------- launch in devcontainer ---------------------
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "name": "Debug main",
+              "type": "cppdbg",
+              "request": "launch",
+              "program": "${workspaceFolder}/app/build/debug/main",
+              "args": [],
+              "stopAtEntry": false,
+              "cwd": "${workspaceFolder}/app",
+              "MIMode": "gdb",
+              "miDebuggerPath": "/usr/bin/gdb",
+              "setupCommands": [
+                {
+                  "description": "Pretty-printing",
+                  "text": "-enable-pretty-printing",
+                  "ignoreFailures": true
+                }
+              ],
+              "preLaunchTask": "CMake: build debug",
+              // "console": "terminal"
+            }
+          ]
+        },
+        //===================== launch in devcontainer =====================
+        //--------------------- tasks in devcontainer ---------------------
+        "tasks": {
+          "version": "2.0.0",
+          "tasks": [
+            {
+              "label": "CMake: configure(debug)",
+              "type": "shell",
+              "command": "cmake",
+              "args": [
+                "-B",
+                "build",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_C_STANDARD=17"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "hide": true
+            },
+            {
+              "label": "CMake: configure(release)",
+              "type": "shell",
+              "command": "cmake",
+              "args": [
+                "-B",
+                "build",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_C_STANDARD=17"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "hide": true
+            },
+            {
+              "label": "CMake: clean all builds",
+              "type": "shell",
+              "command": "rm",
+              "args": [
+                "-rf",
+                "build"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": []
+            },
+            {
+              "label": "CMake: build debug",
+              "type": "shell",
+              "command": "cmake",
+              "args": [
+                "--build",
+                "build",
+                "--target",
+                "main"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "dependsOn": [
+                "CMake: configure(debug)"
+              ],
+              "problemMatcher": [
+                "$gcc"
+              ]
+              // ,"group": {
+              //   "kind": "build",
+              //   "isDefault": true
+              // }
+            },
+            {
+              "label": "CMake: build release and strip",
+              "type": "shell",
+              "command": "cmake",
+              "args": [
+                "--build",
+                "build",
+                "--target",
+                "main"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "dependsOn": [
+                "CMake: configure(release)"
+              ],
+              "problemMatcher": [
+                "$gcc"
+              ],
+              "group": {
+                "kind": "build",
+                "isDefault": true
+              }
+            },
+            {
+              "label": "Zig: build all release",
+              "type": "shell",
+              "command": "echo",
+              "args": [
+                "Building all release targets..."
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "dependsOn": [
+                "Zig: build x86_64-unknown-linux-gnu release",
+                "Zig: build aarch64-unknown-linux-gnu release",
+                "Zig: build x86_64-apple-macos-none release",
+                "Zig: build aarch64_ apple_macos-none release",
+                "Zig: build x86_64-pc-windows-gnu release",
+                "Zig: build aarch64-pc-windows-gnu release"
+              ],
+              "problemMatcher": [],
+              "group": {
+                "kind": "build",
+                "isDefault": true
+              }
+            },
+            {
+              "label": "Zig: build x86_64-unknown-linux-gnu release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            {
+              "label": "Zig: build aarch64-unknown-linux-gnu release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            {
+              "label": "Zig: build x86_64-apple-macos-none release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            {
+              "label": "Zig: build aarch64_ apple_macos-none release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            {
+              "label": "Zig: build x86_64-pc-windows-gnu release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            {
+              "label": "Zig: build aarch64-pc-windows-gnu release",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build.sh",
+                "--basename",
+                "main",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu",
+                "--build-type",
+                "release"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build"
+            },
+            //---------- build libs tasks in devcontainer ----------
+            {
+              "label": "build lib-dynamic all platforms",
+              "type": "shell",
+              "command": "echo",
+              "args": [
+                "Building dynamic libs for all platforms..."
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "dependsOn": [
+                "build lib-dynamic x86_64-unknown-linux-gnu",
+                "build lib-dynamic aarch64-unknown-linux-gnu",
+                "build lib-dynamic x86_64-apple-macos-none",
+                "build lib-dynamic aarch64-apple-macos-none",
+                "build lib-dynamic x86_64-pc-windows-gnu",
+                "build lib-dynamic aarch64-pc-windows-gnu"
+              ],
+              "problemMatcher": [],
+              "group": {
+                "kind": "build"
+              }
+            },
+            {
+              "label": "build lib-dynamic x86_64-unknown-linux-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-dynamic aarch64-unknown-linux-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-dynamic x86_64-apple-macos-none",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-dynamic aarch64-apple-macos-none",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-dynamic x86_64-pc-windows-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-dynamic aarch64-pc-windows-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "dynamic",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            //all statics
+            {
+              "label": "build lib-static all platforms",
+              "type": "shell",
+              "command": "echo",
+              "args": [
+                "Building static libs for all platforms..."
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "dependsOn": [
+                "build lib-static x86_64-unknown-linux-gnu",
+                "build lib-static aarch64-unknown-linux-gnu",
+                "build lib-static x86_64-apple-macos-none",
+                "build lib-static aarch64-apple-macos-none",
+                "build lib-static x86_64-pc-windows-gnu",
+                "build lib-static aarch64-pc-windows-gnu"
+              ],
+              "group": {
+                "kind": "build"
+              }
+            },
+            {
+              "label": "build lib-static x86_64-unknown-linux-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-static aarch64-unknown-linux-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "unknown",
+                "--os",
+                "linux",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-static x86_64-apple-macos-none",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-static aarch64-apple-macos-none",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "apple",
+                "--os",
+                "macos",
+                "--abi",
+                "none"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-static x86_64-pc-windows-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "x86_64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            },
+            {
+              "label": "build lib-static aarch64-pc-windows-gnu",
+              "type": "shell",
+              "command": "sh",
+              "args": [
+                "./build-scripts/build-libs.sh",
+                "--type",
+                "static",
+                "--arch",
+                "aarch64",
+                "--vendor",
+                "pc",
+                "--os",
+                "windows",
+                "--abi",
+                "gnu"
+              ],
+              "options": {
+                "cwd": "${workspaceFolder}/app"
+              },
+              "problemMatcher": [],
+              "group": "build",
+              "hide": true
+            }
+            // ========== build libs tasks in devcontainer ==========
+          ]
+        }
+        //===================== tasks in devcontainer =====================
+      }
+    }
+  }
+}
