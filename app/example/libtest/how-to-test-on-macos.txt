@@ -5,6 +5,10 @@ Build and Run Instructions
 	- 'librandom_utils.a' for static library test
 
 [ Build the binary with dynamic library ]
+
+	Make sure to have the dynamic library in the same directory as the binary.
+	The static library file should not exist in the same directory.
+
 	Debug:
 	$ clang++ -O0 -g -std=c++20 -I. main.cpp -L. -lrandom_utils \
   		-Wl,-rpath,@loader_path \
@@ -18,6 +22,11 @@ Build and Run Instructions
 		-o main
 
 [ Build the binary with static library ]
+
+	Make sure to have the static library in the same directory as the binary.
+	The dynamic library file should not exist in the same directory.
+
+
 	Debug:
 	$ clang++ -O0 -g -std=c++20 -I. main.cpp -L. -lrandom_utils -o main_debug
 

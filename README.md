@@ -77,5 +77,5 @@ You can find the resulting files in the `[WORKSPACE_FOLDER]/app/build/static/pac
 
 #### 8.3 Test the Built Libraries  
 An example CPP project for testing the libraries is located at `[WORKSPACE_FOLDER]/app/example/libtest`.  
-Refer to the `how-to-test-[OS].txt` file in the same directory for instructions on how to test the libraries. Ensure that the appropriate file for your target OS exists.  
+Refer to the `how-to-test-on-[OS].txt` file in the same directory for instructions on how to test the libraries. Ensure that the appropriate file for your target OS exists.  
 **Note:** Testing must be performed on the respective target OS for the libraries.

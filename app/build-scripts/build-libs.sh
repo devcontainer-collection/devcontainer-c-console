@@ -113,7 +113,7 @@ if [ "$BUILD_TYPE" = "dynamic" ]; then
           -std=c17 \
           -o "$OUTDIR/${LIB_PREFIX}${NAME}.${EXT}"
 
-        # install_name 수정: only for macOS target
+        # Fix install_name for .dylib on macOS
         if [[ "$OS" == "macos" || "$OS" == "osx" ]] && [[ "$EXT" == "dylib" ]]; then
           if command -v llvm-install-name-tool &>/dev/null; then
             echo "[install_name] setting install_name to @rpath/${LIB_PREFIX}${NAME}.${EXT}"

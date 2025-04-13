@@ -46,7 +46,7 @@
                   "ignoreFailures": true
                 }
               ],
-              "preLaunchTask": "CMake: build debug",
+              "preLaunchTask": "CMake: build debug"
               // "console": "terminal"
             }
           ]
@@ -120,10 +120,6 @@
               "problemMatcher": [
                 "$gcc"
               ]
-              // ,"group": {
-              //   "kind": "build",
-              //   "isDefault": true
-              // }
             },
             {
               "label": "CMake: build release and strip",
@@ -195,8 +191,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             {
               "label": "Zig: build aarch64-unknown-linux-gnu release",
@@ -220,8 +215,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             {
               "label": "Zig: build x86_64-apple-macos-none release",
@@ -245,8 +239,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             {
               "label": "Zig: build aarch64_ apple_macos-none release",
@@ -270,8 +263,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             {
               "label": "Zig: build x86_64-pc-windows-gnu release",
@@ -295,8 +287,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             {
               "label": "Zig: build aarch64-pc-windows-gnu release",
@@ -320,8 +311,7 @@
               "options": {
                 "cwd": "${workspaceFolder}/app"
               },
-              "problemMatcher": [],
-              "group": "build"
+              "problemMatcher": []
             },
             //---------- build libs tasks in devcontainer ----------
             {
@@ -344,7 +334,8 @@
               ],
               "problemMatcher": [],
               "group": {
-                "kind": "build"
+                "kind": "build",
+                "isDefault": true
               }
             },
             {
@@ -368,7 +359,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -392,7 +382,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -416,7 +405,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -440,7 +428,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -464,7 +451,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -488,7 +474,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             //all statics
@@ -511,7 +496,8 @@
                 "build lib-static aarch64-pc-windows-gnu"
               ],
               "group": {
-                "kind": "build"
+                "kind": "build",
+                "isDefault": true
               }
             },
             {
@@ -535,7 +521,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -559,7 +544,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -583,7 +567,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -607,7 +590,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -631,7 +613,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             },
             {
@@ -655,7 +636,6 @@
                 "cwd": "${workspaceFolder}/app"
               },
               "problemMatcher": [],
-              "group": "build",
               "hide": true
             }
             // ========== build libs tasks in devcontainer ==========
